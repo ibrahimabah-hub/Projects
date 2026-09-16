@@ -3,6 +3,7 @@ from datetime import date, datetime
 from pydantic import BaseModel, field_validator, model_validator
 from sqlmodel import SQLModel, Field, Relationship
 
+
 class VisitorBase(SQLModel):
     ip_address: str | None = Field(default=None, nullable=True)
     #visit_id: int = Field(default=None, foreign_key="visit.id", nullable=True)

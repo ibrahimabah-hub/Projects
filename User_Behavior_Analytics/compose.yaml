@@ -1,0 +1,31 @@
+services:
+  app:
+    depends_on:
+      db:
+        condition: service_healthy
+    image: uba:test
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - UVICORN_RELOAD=true
+    
+  
+  db:
+    image: postgres:17
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: uba
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:

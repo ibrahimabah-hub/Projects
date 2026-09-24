@@ -38,7 +38,6 @@ class VisitorBase(BaseModel):
     visits: List[VisitBase]
 
 class VisitBase(BaseModel):
-    duration: float
     hits: List[HitBase] 
 
 

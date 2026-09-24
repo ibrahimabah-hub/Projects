@@ -2,22 +2,24 @@ from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel
 from typing import List, Annotated
 import database.models
-from database.database import engine, SessionLocal
+from database.database import engine, SessionLocal, _add_tables, get_db
 from sqlalchemy.orm import Session
 from database.models import HitBase, VisitorBase, VisitBase
 from datetime import datetime
+from contextlib import asynccontextmanager
 
-app = FastAPI()
-database.models.Base.metadata.create_all(bind=engine)
+@asynccontextmanager
+async def lifespan(app : FastAPI):
+    _add_tables()
+    yield
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+app = FastAPI(lifespan=lifespan)
 
 db_dependency = Annotated[Session, Depends(get_db)]
+
+@app.get("/")
+def root():
+    return {"Hello": "World"}
 
 @app.get("/visitors/{visitor_id}")
 async def get_visitor_by_id(visitor_id: int, db: db_dependency):
@@ -44,7 +46,7 @@ async def get_visits_by_id(visitor_id: int, db: db_dependency):
 async def get_visits(db: db_dependency):
     result = db.query(database.models.Visit).all()
     if not result:
-        raise HTTPException(status_code=404, detail="No visitors not found")
+        raise HTTPException(status_code=404, detail="No visitors found")
     return result
 
 @app.post("/visitors/")
@@ -55,10 +57,10 @@ async def create_visitor(visitor: VisitorBase, db: db_dependency):
     db.refresh(db_visitor)
     for visit in visitor.visits:
         if len(visit.hits)>1:
-            visit.duration = (visit.hits[-1].timestamp - visit.hits[0].timestamp).total_seconds()
+            duration = (visit.hits[-1].timestamp - visit.hits[0].timestamp).total_seconds()
         else:
-            visit.duration = 0
-        db_visit = database.models.Visit(visitor_id=db_visitor.id, duration=visit.duration)
+            duration = 0
+        db_visit = database.models.Visit(visitor_id=db_visitor.id, duration=duration)
         db.add(db_visit)
         db.commit()
         for hit in visit.hits:

@@ -6,7 +6,9 @@ import os
 
 load_dotenv()
 
-engine = create_engine(os.getenv('URL_DATABASE'))
+DATABASE_URL = f"postgresql+psycopg2://{os.getenv('db_user')}:{os.getenv('db_pass')}@{os.getenv('db_host')}:5432/{os.getenv('db_name')}"
+
+engine = create_engine(DATABASE_URL)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

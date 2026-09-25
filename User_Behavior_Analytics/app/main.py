@@ -32,7 +32,7 @@ async def get_visitor_by_id(visitor_id: int, db: db_dependency):
 async def get_visitors(db: db_dependency):
     result = db.query(database.models.Visitor).all()
     if not result:
-        raise HTTPException(status_code=404, detail="No visitors not found")
+        raise HTTPException(status_code=404, detail="No visitors found")
     return result
 
 @app.get("/visits/{visitor_id}")

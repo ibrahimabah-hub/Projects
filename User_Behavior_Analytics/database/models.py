@@ -33,14 +33,13 @@ class Product(Base):
     brand  = Column(String, index=True)
     price  = Column(Float, index=True)
 
-class VisitorBase(BaseModel):
-    ip_address: str
-    visits: List[VisitBase]
-
-class VisitBase(BaseModel):
-    hits: List[HitBase] 
-
-
 class HitBase(BaseModel):
     page_url: str
     timestamp: datetime
+
+class VisitBase(BaseModel):
+    hits: List[HitBase]
+
+class VisitorBase(BaseModel):
+    ip_address: str
+    visits: List[VisitBase]

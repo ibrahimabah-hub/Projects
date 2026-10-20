@@ -63,3 +63,4 @@ jobs:
         push: true
         tags: ebruh/projects:uba_test
         file: User_Behavior_Analytics/Dockerfile
+        context: .

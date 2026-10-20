@@ -3,7 +3,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 WORKDIR /code
 
-COPY ./requirements.txt /code/requirements.txt
+COPY requirements.txt /code/requirements.txt
 
 
 RUN python3 -m venv /venv

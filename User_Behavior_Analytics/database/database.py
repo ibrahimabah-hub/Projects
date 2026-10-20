@@ -3,6 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from dotenv import load_dotenv
 import os
+import psycopg2
 
 load_dotenv()
 
@@ -24,3 +25,5 @@ def get_db():
         yield db
     finally:
         db.close()
+
+connection = psycopg2.connect(host = os.getenv('db_host'), database=os.getenv("db_name"), user=os.getenv("db_user"), password=os.getenv("db_pass"))

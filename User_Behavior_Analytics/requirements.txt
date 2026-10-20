@@ -4,3 +4,6 @@ uvicorn>=0.53
 psycopg2-binary>=2.9
 dotenv>=0.9.9
 sqlmodel>=0.0.47
+httpx>=0.24.1
+pytest
+flake8

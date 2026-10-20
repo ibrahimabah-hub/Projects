@@ -24,5 +24,6 @@ def get_db():
         yield db
     finally:
         db.close()
+        
 def get_connection():
     return psycopg2.connect(host = os.getenv('db_host'), database=os.getenv("db_name"), user=os.getenv("db_user"), password=os.getenv("db_pass"))

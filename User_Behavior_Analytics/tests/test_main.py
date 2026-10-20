@@ -1,7 +1,9 @@
 from fastapi.testclient import TestClient
 
 from app.main import app
+from database.database import _add_tables
 
+_add_tables()
 client = TestClient(app)
 
 def test_greeting():
